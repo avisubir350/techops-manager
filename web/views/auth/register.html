@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="../../assets/img/company_logo.png"
+    />
+    <title>Lokenath Computer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+    <link rel="stylesheet" href="../../assets/css/style.css" />
+  </head>
+  <body
+    class="bg-mesh min-h-screen flex items-center justify-center p-4 relative overflow-y-auto custom-scrollbar"
+  >
+    <div
+      class="absolute top-0 -left-20 w-96 h-96 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"
+    ></div>
+    <div
+      class="absolute bottom-0 -right-20 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"
+    ></div>
+
+    <div class="relative w-full max-w-lg">
+      <div class="text-center mb-8">
+        <div
+          class="inline-block p-1 bg-white/20 rounded-full mb-4 backdrop-blur-sm"
+        >
+          <img
+            src="../../assets/img/lokenath_baba.png"
+            alt="Baba Lokenath"
+            class="w-24 h-24 rounded-full object-cover border-2 border-white shadow-lg"
+          />
+        </div>
+        <h1 class="text-3xl font-extrabold text-white tracking-tight">
+          Lokenath Computer
+        </h1>
+      </div>
+
+      <div class="glass-card rounded-3xl shadow-2xl p-8 md:p-10">
+        <header class="mb-8 text-center">
+          <h2 class="text-2xl font-bold text-gray-800">Create Account</h2>
+          <p class="text-sm text-gray-500 mt-2 font-medium">
+            Get started with your technician account
+          </p>
+        </header>
+
+        <form id="registerForm" class="space-y-4">
+          <div class="group">
+            <label
+              for="fullName"
+              class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 ml-1"
+              >Full Name</label
+            >
+            <div class="relative">
+              <i
+                class="ph-user text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 text-xl"
+              ></i>
+              <input
+                type="text"
+                id="fullName"
+                name="fullName"
+                required
+                placeholder="Arjun Ghosh"
+                class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label
+              for="email"
+              class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 ml-1"
+              >Email Address</label
+            >
+            <div class="relative">
+              <i
+                class="ph-envelope-simple text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 text-xl"
+              ></i>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                required
+                placeholder="arjun.ghosh@email.com"
+                class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm"
+              />
+            </div>
+            <p
+              id="emailError"
+              class="text-[11px] text-red-500 mt-1 hidden italic"
+            >
+              Please enter a valid email address
+            </p>
+          </div>
+
+          <div>
+            <label
+              for="phone"
+              class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 ml-1"
+              >Phone Number</label
+            >
+            <div class="relative">
+              <i
+                class="ph-phone text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 text-xl"
+              ></i>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                required
+                placeholder="98765 43210"
+                class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm"
+              />
+            </div>
+            <p
+              id="phoneError"
+              class="text-[11px] text-red-500 mt-1 hidden italic"
+            >
+              Invalid mobile number (10 digits starting with 6-9)
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label
+                for="password"
+                class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 ml-1"
+                >Password</label
+              >
+              <div class="relative">
+                <input
+                  type="password"
+                  id="password"
+                  required
+                  placeholder="••••••••"
+                  class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm"
+                />
+                <button
+                  type="button"
+                  id="togglePassword"
+                  class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-indigo-600"
+                >
+                  <i class="ph-eye text-lg"></i>
+                </button>
+              </div>
+            </div>
+            <div>
+              <label
+                for="confirmPassword"
+                class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 ml-1"
+                >Confirm</label
+              >
+              <div class="relative">
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  required
+                  placeholder="••••••••"
+                  class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="px-1">
+            <div class="flex justify-between items-center mb-1">
+              <span
+                id="passwordRequirements"
+                class="text-[10px] text-gray-400 font-bold uppercase tracking-tight"
+                >At least 8 characters</span
+              >
+            </div>
+            <div
+              id="passwordStrength"
+              class="password-strength bg-gray-100 w-full"
+            ></div>
+            <p
+              id="passwordMatchError"
+              class="text-[11px] text-red-500 mt-1 hidden italic"
+            >
+              Passwords do not match
+            </p>
+          </div>
+
+          <div
+            id="errorMessage"
+            class="hidden p-3 bg-red-50 border border-red-100 text-red-600 rounded-xl text-xs font-medium flex items-center"
+          >
+            <i class="ph-warning-circle-fill mr-2 text-lg"></i>
+            <span id="errorText"></span>
+          </div>
+          <div
+            id="successMessage"
+            class="hidden p-3 bg-green-50 border border-green-100 text-green-600 rounded-xl text-xs font-medium flex items-center"
+          >
+            <i class="ph-check-circle-fill mr-2 text-lg"></i> Account created!
+            Redirecting...
+          </div>
+
+          <button
+            type="submit"
+            id="registerBtn"
+            disabled
+            class="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-300 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all active:scale-95 flex items-center justify-center"
+          >
+            <i class="ph-user-plus-bold mr-2"></i> Create Account
+          </button>
+        </form>
+
+        <div class="mt-8 pt-6 border-t border-gray-100 text-center">
+          <p class="text-sm text-gray-500 font-medium">
+            Already have an account?
+            <a
+              href="login.html"
+              class="text-indigo-600 hover:underline font-bold"
+              >Sign in here</a
+            >
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../assets/js/register.js"></script>
+  </body>
+</html>

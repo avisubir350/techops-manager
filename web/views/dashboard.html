@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="../../assets/img/company_logo.png"
+    />
+    <title>Lokenath Computer | Dashboard</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+      }
+      thead th i {
+        display: inline-block !important;
+        transition: transform 0.2s ease-in-out !important;
+        vertical-align: middle;
+      }
+      .rotate-180 {
+        transform: rotate(180deg);
+      }
+
+      /* Fixed width for the metrics sidebar */
+      .metrics-sidebar {
+        min-width: 260px;
+        max-width: 260px;
+      }
+    </style>
+  </head>
+
+  <body class="bg-gray-50 h-screen flex flex-col overflow-hidden">
+    <header class="bg-white shadow-sm border-b sticky top-0 z-30 flex-none">
+      <div
+        class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center"
+      >
+        <div class="flex items-center space-x-3">
+          <div class="bg-indigo-600 p-2 rounded-lg shadow-sm">
+            <i class="ph-monitor-fill text-white text-xl"></i>
+          </div>
+          <h1 class="text-xl font-extrabold text-gray-900 tracking-tight">
+            Lokenath <span class="text-indigo-600">Computer</span>
+          </h1>
+        </div>
+        <nav class="hidden md:flex items-center space-x-8">
+          <a
+            href="dashboard.html"
+            class="text-sm font-bold text-indigo-600 flex items-center border-b-2 border-indigo-600 pb-1"
+          >
+            <i class="ph-layout-fill mr-1.5"></i> Dashboard
+          </a>
+          <a
+            href="./orders/new_service_order.html"
+            class="text-sm font-medium text-gray-500 hover:text-indigo-600 flex items-center transition-colors"
+          >
+            <i class="ph-plus-circle-fill mr-1.5"></i> New Order
+          </a>
+        </nav>
+        <div class="flex items-center space-x-5">
+          <div class="flex flex-col items-end">
+            <span
+              class="text-[10px] font-bold text-gray-400 uppercase tracking-widest"
+              >Technician</span
+            >
+            <span id="user-display" class="text-sm font-bold text-gray-700"
+              >Loading...</span
+            >
+          </div>
+          <button
+            id="logoutBtn"
+            title="Sign Out"
+            class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-50 text-gray-500 hover:bg-red-50 hover:text-red-600 transition-all border border-gray-100"
+          >
+            <i class="ph ph-sign-out text-xl"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1 flex flex-row overflow-hidden">
+      <aside
+        class="metrics-sidebar bg-gray-50 border-r border-gray-200 p-4 flex flex-col space-y-4 overflow-y-auto custom-scrollbar flex-none"
+      >
+        <div class="flex items-center space-x-2 px-1 mb-2">
+          <i class="ph-chart-line-up-fill text-indigo-600 text-lg"></i>
+          <h2
+            class="text-[11px] font-black text-gray-400 uppercase tracking-widest"
+          >
+            Summary Statistics
+          </h2>
+        </div>
+
+        <div id="metricsContainer" class="flex flex-col gap-4">
+          <div class="animate-pulse space-y-4">
+            <div class="h-24 bg-gray-200 rounded-xl"></div>
+            <div class="h-24 bg-gray-200 rounded-xl"></div>
+            <div class="h-24 bg-gray-200 rounded-xl"></div>
+          </div>
+        </div>
+
+        <div class="mt-auto pt-6">
+          <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-4">
+            <p
+              class="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-1"
+            >
+              Quick Tip
+            </p>
+            <p class="text-xs text-indigo-600 leading-relaxed">
+              Click on a row to view full device history and service details.
+            </p>
+          </div>
+        </div>
+      </aside>
+
+      <div class="flex-1 flex flex-col p-4 sm:p-6 overflow-hidden">
+        <section
+          class="bg-white rounded-xl shadow-sm border border-gray-200 mb-4 flex-none"
+        >
+          <div class="p-3 flex flex-col md:flex-row items-center gap-3">
+            <div class="relative flex-1 w-full">
+              <i
+                class="ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+              ></i>
+              <input
+                type="text"
+                id="search"
+                placeholder="Search by name or phone..."
+                class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm outline-none"
+              />
+            </div>
+            <div class="w-full md:w-44">
+              <select
+                id="statusFilter"
+                onchange="handleStatusChange()"
+                class="w-full bg-gray-50 border border-gray-100 rounded-lg px-3 py-2 text-sm font-bold text-gray-700 outline-none"
+              >
+                <option value="">All Statuses</option>
+                <option value="New Order">New Order</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Ready for Delivery">Ready for Delivery</option>
+                <option value="Delivered">Delivered</option>
+              </select>
+            </div>
+            <div class="flex items-center gap-2 w-full md:w-auto">
+              <button
+                onclick="toggleAdvancedFilters()"
+                class="flex-1 md:flex-none px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-bold text-gray-600 hover:bg-gray-50 flex items-center justify-center gap-2"
+              >
+                <i class="ph-sliders"></i> Filters
+              </button>
+              <button
+                onclick="handleFilterReset()"
+                class="flex-1 md:flex-none px-4 py-2 text-red-500 hover:bg-red-50 rounded-lg text-sm font-bold"
+              >
+                Reset
+              </button>
+              <button
+                onclick="downloadDashboardCSV()"
+                title="Export to CSV"
+                class="flex items-center justify-center w-10 h-10 bg-white border border-gray-200 rounded-lg text-green-600 hover:bg-green-50 hover:border-green-300 transition-all shadow-sm active:scale-95"
+              >
+                <i class="ph ph-bold ph-download-simple text-2xl"></i>
+              </button>
+            </div>
+          </div>
+
+          <div
+            id="advancedFilters"
+            class="hidden border-t border-gray-100 bg-gray-50/50 p-4"
+          >
+            <form
+              id="filterForm"
+              class="grid grid-cols-1 md:grid-cols-4 gap-4"
+              onsubmit="handleFilterSubmit(event)"
+            >
+              <div>
+                <label
+                  class="block text-[10px] font-bold text-gray-400 uppercase mb-1"
+                  >Created By</label
+                >
+                <select
+                  id="createdByFilter"
+                  name="created_by"
+                  class="w-full p-2 bg-white border border-gray-200 rounded-lg text-sm outline-none"
+                >
+                  <option value="">All Users</option>
+                </select>
+              </div>
+              <div>
+                <label
+                  class="block text-[10px] font-bold text-gray-400 uppercase mb-1"
+                  >Repair Location</label
+                >
+                <select
+                  id="vendorStatusFilter"
+                  name="is_outsourced"
+                  class="w-full p-2 bg-white border border-gray-200 rounded-lg text-sm outline-none font-medium"
+                >
+                  <option value="">All Locations</option>
+                  <option value="true">At External Vendor</option>
+                  <option value="false">Internal (In-Shop)</option>
+                </select>
+              </div>
+              <div class="md:col-span-2 grid grid-cols-2 gap-3">
+                <div>
+                  <label
+                    class="block text-[10px] font-bold text-gray-400 uppercase mb-1"
+                    >Created Range</label
+                  >
+                  <div class="flex gap-1">
+                    <input
+                      type="date"
+                      name="created_at_start"
+                      class="w-full p-1.5 border rounded text-xs"
+                    /><input
+                      type="date"
+                      name="created_at_end"
+                      class="w-full p-1.5 border rounded text-xs"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label
+                    class="block text-[10px] font-bold text-gray-400 uppercase mb-1"
+                    >Delivery Range</label
+                  >
+                  <div class="flex gap-1">
+                    <input
+                      type="date"
+                      name="expected_delivery_date_start"
+                      class="w-full p-1.5 border rounded text-xs"
+                    /><input
+                      type="date"
+                      name="expected_delivery_date_end"
+                      class="w-full p-1.5 border rounded text-xs"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="md:col-span-4 flex justify-end">
+                <button
+                  type="submit"
+                  class="bg-indigo-600 text-white px-6 py-2 rounded-lg text-xs font-bold shadow hover:bg-indigo-700 transition-all"
+                >
+                  Apply Advanced Filters
+                </button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <section
+          class="flex-1 bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col"
+        >
+          <div
+            class="px-5 py-3 bg-gray-50 border-b flex items-center justify-between"
+          >
+            <div class="flex items-center space-x-2">
+              <i class="ph-table-fill text-indigo-600 text-lg"></i>
+              <h2 class="font-bold text-gray-800">Service Orders</h2>
+            </div>
+            <div
+              id="paginationInfo"
+              class="text-[11px] font-bold text-gray-400 uppercase tracking-widest"
+            ></div>
+          </div>
+
+          <div class="flex-1 overflow-y-auto custom-scrollbar">
+            <table
+              id="dashboardTable"
+              class="min-w-full divide-y divide-gray-200 border-separate border-spacing-0"
+            >
+              <thead class="bg-gray-50 sticky top-0 z-10 shadow-sm">
+                <tr>
+                  <th
+                    id="sort-id"
+                    data-sort-by="id"
+                    class="px-4 py-3 text-left text-[10px] font-bold text-gray-500 uppercase cursor-pointer hover:bg-gray-100 border-b"
+                  >
+                    <div class="flex items-center justify-between">
+                      <span>Ticket ID</span
+                      ><i
+                        id="sort-arrow-id"
+                        class="ph-caret-down-fill text-sm"
+                      ></i>
+                    </div>
+                  </th>
+                  <th
+                    id="sort-customer_name"
+                    data-sort-by="customer_name"
+                    class="px-4 py-3 text-left text-[10px] font-bold text-gray-500 uppercase cursor-pointer hover:bg-gray-100 border-b"
+                  >
+                    <div class="flex items-center justify-between">
+                      <span>Customer</span
+                      ><i
+                        id="sort-arrow-customer_name"
+                        class="ph-caret-down-fill text-sm opacity-0"
+                      ></i>
+                    </div>
+                  </th>
+                  <th
+                    id="sort-status"
+                    data-sort-by="status"
+                    class="px-4 py-3 text-left text-[10px] font-bold text-gray-500 uppercase cursor-pointer hover:bg-gray-100 border-b"
+                  >
+                    <div class="flex items-center justify-between">
+                      <span>Status</span
+                      ><i
+                        id="sort-arrow-status"
+                        class="ph-caret-down-fill text-sm opacity-0"
+                      ></i>
+                    </div>
+                  </th>
+                  <th
+                    id="sort-engineer"
+                    data-sort-by="assigned_engineer_name"
+                    class="px-4 py-3 text-left text-[10px] font-bold text-gray-500 uppercase cursor-pointer hover:bg-gray-100 border-b"
+                  >
+                    <div class="flex items-center justify-between">
+                      <span>Engineer</span
+                      ><i
+                        id="sort-arrow-engineer"
+                        class="ph-caret-down-fill text-sm opacity-0"
+                      ></i>
+                    </div>
+                  </th>
+                  <th
+                    id="sort-updated_at"
+                    data-sort-by="updated_at"
+                    class="px-4 py-3 text-left text-[10px] font-bold text-gray-500 uppercase cursor-pointer hover:bg-gray-100 border-b"
+                  >
+                    <div class="flex items-center justify-between">
+                      <span>Updated</span
+                      ><i
+                        id="sort-arrow-updated_at"
+                        class="ph-caret-down-fill text-sm"
+                      ></i>
+                    </div>
+                  </th>
+                  <th
+                    id="sort-total_cost"
+                    data-sort-by="total_cost"
+                    class="px-4 py-3 text-right text-[10px] font-bold text-gray-500 uppercase cursor-pointer hover:bg-gray-100 border-b"
+                  >
+                    <div class="flex items-center justify-between">
+                      <span>Total Cost</span
+                      ><i
+                        id="sort-arrow-total_cost"
+                        class="ph-caret-down-fill text-sm opacity-0"
+                      ></i>
+                    </div>
+                  </th>
+                  <th
+                    id="sort-delivery"
+                    data-sort-by="expected_delivery_date"
+                    class="px-4 py-3 text-center text-[10px] font-bold text-gray-500 uppercase cursor-pointer hover:bg-gray-100 border-b"
+                  >
+                    <div class="flex items-center justify-between">
+                      <span>Exp. Delivery</span
+                      ><i
+                        id="sort-arrow-delivery"
+                        class="ph-caret-down-fill text-sm opacity-0"
+                      ></i>
+                    </div>
+                  </th>
+                  <th class="px-4 py-3 border-b w-10"></th>
+                </tr>
+              </thead>
+              <tbody
+                id="ordersTableBody"
+                class="bg-white divide-y divide-gray-200"
+              >
+                <tr>
+                  <td
+                    colspan="8"
+                    class="text-center py-20 text-gray-400 italic"
+                  >
+                    Loading orders...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <div
+          id="paginationControls"
+          class="flex-none mt-4 flex justify-between items-center py-2"
+        ></div>
+      </div>
+    </main>
+
+    <template id="detailRowTemplate">
+      <tr class="detail-row bg-gray-50 hidden">
+        <td colspan="8" class="p-6">
+          <div
+            class="bg-white border border-gray-200 rounded-xl shadow-xl overflow-hidden"
+          >
+            <div id="detail-loading" class="p-8 text-center text-gray-500">
+              <i class="ph-circle-notch ph-spin text-2xl mb-2"></i>
+              <p>Fetching full ticket history...</p>
+            </div>
+            <div
+              id="detail-content"
+              class="hidden animate-in fade-in duration-300"
+            >
+              <div
+                class="bg-gray-50 px-6 py-3 border-b flex justify-between items-center"
+              >
+                <div class="flex items-center space-x-4">
+                  <span class="text-sm font-bold text-gray-900"
+                    >Ticket Detail:
+                    <span id="detail-ticket-id" class="text-indigo-600"></span
+                  ></span>
+                  <span
+                    id="detail-ticket-type"
+                    class="text-xs bg-indigo-100 text-indigo-700 px-2 py-1 rounded"
+                  ></span>
+                </div>
+                <div class="flex items-center space-x-6">
+                  <button
+                    onclick="handleDownloadPDF()"
+                    class="flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-bold text-xs py-1 px-2 rounded-md hover:bg-indigo-50"
+                  >
+                    <i class="ph-file-pdf text-lg"></i
+                    ><span>Download Details</span>
+                  </button>
+                  <div class="text-xs text-gray-500 text-right">
+                    Last Updated<br /><span
+                      id="detail-last-updated"
+                      class="font-medium text-gray-700"
+                    ></span>
+                  </div>
+                  <div id="detail-edit-container"></div>
+                </div>
+              </div>
+
+              <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  <div id="customerInfo" class="space-y-3">
+                    <h4
+                      class="text-xs font-bold tracking-wider text-gray-400 uppercase flex items-center"
+                    >
+                      <i class="ph-user-focus-fill mr-2 text-lg"></i> CUSTOMER
+                      DETAILS
+                    </h4>
+                    <div
+                      class="text-sm space-y-1 text-gray-700"
+                      id="customer-data-list"
+                    ></div>
+                  </div>
+                  <div id="deviceInfo" class="space-y-3">
+                    <h4
+                      class="text-xs font-bold tracking-wider text-gray-400 uppercase flex items-center"
+                    >
+                      <i class="ph-laptop-fill mr-2 text-lg"></i> DEVICE
+                      INFORMATION
+                    </h4>
+                    <div
+                      class="text-sm space-y-1 text-gray-700"
+                      id="device-data-list"
+                    ></div>
+                  </div>
+                  <div id="serviceInfo" class="space-y-3">
+                    <h4
+                      class="text-xs font-bold tracking-wider text-gray-400 uppercase flex items-center"
+                    >
+                      <i class="ph-receipt-fill mr-2 text-lg"></i> SERVICES &
+                      PRICING
+                    </h4>
+                    <div id="serviceLineItems" class="space-y-2"></div>
+                    <div
+                      class="pt-2 border-t flex justify-between items-center"
+                    >
+                      <span class="font-bold text-gray-900"
+                        >Total Charged:</span
+                      >
+                      <span
+                        id="detail-total-cost"
+                        class="text-lg font-black text-green-600"
+                      ></span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8 pt-6 border-t"
+                >
+                  <div>
+                    <h4
+                      class="text-xs font-bold tracking-wider text-gray-400 uppercase mb-3 flex items-center"
+                    >
+                      <i class="ph-info-fill mr-2 text-lg"></i> ISSUE & CONSENT
+                    </h4>
+                    <div
+                      class="bg-gray-50 p-4 rounded-lg border border-gray-100 italic text-gray-600 text-sm mb-3"
+                      id="detail-issue-desc"
+                    ></div>
+                    <div
+                      class="text-xs text-gray-500 font-medium"
+                      id="detail-backup-consent"
+                    ></div>
+                  </div>
+                  <div>
+                    <h4
+                      class="text-xs font-bold tracking-wider text-gray-400 uppercase mb-3 flex items-center"
+                    >
+                      <i
+                        class="ph-clock-counter-clockwise-fill mr-2 text-lg"
+                      ></i>
+                      ACTIVITY LOG
+                    </h4>
+                    <div
+                      id="historyLog"
+                      class="space-y-3 max-h-64 overflow-y-auto pr-2 custom-scrollbar"
+                    ></div>
+                  </div>
+                  <div>
+                    <h4
+                      class="text-xs font-bold tracking-wider text-gray-400 uppercase mb-3 flex items-center"
+                    >
+                      <i class="ph-truck-fill mr-2 text-lg"></i> EXTERNAL REPAIR
+                    </h4>
+                    <div
+                      id="vendorHistoryLog"
+                      class="space-y-3 max-h-64 overflow-y-auto pr-2 custom-scrollbar"
+                    ></div>
+                    <div
+                      id="vendor-action-buttons"
+                      class="mt-4 pt-4 border-t border-dashed"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </template>
+
+    <div
+      id="editModal"
+      class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col"
+      >
+        <div
+          class="px-6 py-4 border-b flex justify-between items-center bg-gray-50"
+        >
+          <h2 class="text-xl font-bold text-gray-800">
+            Edit Ticket:
+            <span id="modalTicketId" class="text-indigo-600"></span>
+          </h2>
+          <button
+            onclick="closeEditModal()"
+            class="text-gray-400 hover:text-gray-600"
+          >
+            <i class="ph-x text-2xl"></i>
+          </button>
+        </div>
+        <form id="editTicketForm" class="flex-1 overflow-y-auto p-6 space-y-6">
+          <input type="hidden" id="edit-id" />
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label
+                class="block text-xs font-bold text-gray-500 mb-1 uppercase"
+                >Order Status</label
+              >
+              <select
+                id="edit-status"
+                onchange="validateForm()"
+                class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500"
+              >
+                <option value="New Order">New Order</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Ready for Delivery">Ready for Delivery</option>
+                <option value="Delivered">Delivered</option>
+              </select>
+            </div>
+            <div>
+              <label
+                class="block text-xs font-bold text-gray-500 mb-1 uppercase"
+                >Assigned Engineer</label
+              >
+              <select
+                id="edit-engineer"
+                onchange="validateForm()"
+                class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500"
+              ></select>
+            </div>
+            <div>
+              <label
+                class="block text-xs font-bold text-gray-500 mb-1 uppercase"
+                >Exp. Delivery Date</label
+              >
+              <input
+                type="date"
+                id="edit-delivery"
+                onchange="validateForm()"
+                class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+          </div>
+          <div class="border rounded-xl overflow-hidden">
+            <div
+              class="bg-gray-50 px-4 py-2 border-b flex justify-between items-center"
+            >
+              <span class="text-sm font-bold text-gray-700"
+                >Service Line Items</span
+              >
+              <button
+                type="button"
+                onclick="addBlankItemRow()"
+                class="text-xs bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700"
+              >
+                Add Service
+              </button>
+            </div>
+            <table class="w-full text-sm">
+              <thead class="bg-gray-100 text-gray-600 text-left">
+                <tr>
+                  <th class="px-4 py-2">Service Description</th>
+                  <th class="px-4 py-2 w-24">Rate</th>
+                  <th class="px-4 py-2 w-20">Disc%</th>
+                  <th class="px-4 py-2 w-24 text-right">Final</th>
+                  <th class="px-4 py-2 w-10"></th>
+                </tr>
+              </thead>
+              <tbody id="edit-line-items-body"></tbody>
+            </table>
+            <div
+              class="bg-gray-50 px-4 py-3 flex justify-between items-center border-t"
+            >
+              <span class="font-bold text-gray-800">Grand Total</span>
+              <span
+                id="edit-total-display"
+                class="text-xl font-black text-indigo-600"
+                >Rs. 0.00</span
+              >
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-500 mb-1 uppercase"
+              >Issue/Resolution Notes</label
+            >
+            <textarea
+              id="edit-notes"
+              oninput="validateForm()"
+              rows="3"
+              class="w-full border rounded-lg p-3 text-sm focus:ring-2 focus:ring-indigo-500"
+            ></textarea>
+          </div>
+        </form>
+        <div class="px-6 py-4 border-t bg-gray-50 flex justify-end space-x-3">
+          <button
+            type="button"
+            onclick="closeEditModal()"
+            class="px-4 py-2 text-gray-600 font-medium"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onclick="saveTicketChanges()"
+            class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-indigo-700 shadow-md"
+          >
+            Save Updates
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="outsourceModal"
+      class="fixed inset-0 bg-black bg-opacity-50 z-[60] hidden flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col"
+      >
+        <div
+          class="px-6 py-4 border-b bg-orange-50 flex justify-between items-center"
+        >
+          <h2 class="text-lg font-bold text-orange-800 flex items-center">
+            <i class="ph-truck mr-2"></i> Send to Vendor
+          </h2>
+          <button
+            onclick="closeOutsourceModal()"
+            class="text-gray-400 hover:text-gray-600"
+          >
+            <i class="ph-x text-2xl"></i>
+          </button>
+        </div>
+        <div class="p-6 space-y-4">
+          <input type="hidden" id="outsourceTicketId" />
+          <div>
+            <label
+              class="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-wider"
+              >Vendor Name *</label
+            >
+            <input
+              type="text"
+              id="vendorNameInput"
+              placeholder="e.g., HP Service Center"
+              class="w-full border rounded-lg p-2.5 text-sm outline-none"
+            />
+          </div>
+          <div>
+            <label
+              class="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-wider"
+              >Reason</label
+            >
+            <textarea
+              id="vendorReasonInput"
+              rows="3"
+              class="w-full border rounded-lg p-2.5 text-sm outline-none"
+            ></textarea>
+          </div>
+        </div>
+        <div class="px-6 py-4 border-t bg-gray-50 flex justify-end space-x-3">
+          <button
+            onclick="closeOutsourceModal()"
+            class="text-sm font-medium text-gray-600"
+          >
+            Cancel
+          </button>
+          <button
+            onclick="submitOutsource()"
+            class="bg-orange-600 text-white px-5 py-2 rounded-lg text-sm font-bold shadow-md"
+          >
+            Confirm Outsource
+          </button>
+        </div>
+      </div>
+    </div>
+    <script src="../assets/js/dashboard.js"></script>
+  </body>
+</html>

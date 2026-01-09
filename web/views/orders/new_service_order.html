@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="../../assets/img/company_logo.png"
+    />
+    <title>Lokenath Computer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="../../assets/css/style.css" />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .sticky-sidebar {
+        top: 2rem;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 min-h-screen flex flex-col">
+    <header class="bg-white shadow-sm border-b sticky top-0 z-30">
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center"
+      >
+        <div class="flex items-center space-x-3">
+          <div class="bg-indigo-600 p-2 rounded-lg shadow-sm">
+            <i class="ph ph-monitor-fill text-white text-xl"></i>
+          </div>
+          <h1 class="text-xl font-extrabold text-gray-900 tracking-tight">
+            Lokenath <span class="text-indigo-600">Computer</span>
+          </h1>
+        </div>
+
+        <nav class="hidden md:flex items-center space-x-8">
+          <a
+            href="../dashboard.html"
+            class="text-sm font-medium text-gray-500 hover:text-indigo-600 flex items-center transition-colors"
+          >
+            <i class="ph ph-layout-fill mr-1.5"></i> Dashboard
+          </a>
+          <a
+            href="new_service_order.html"
+            class="text-sm font-bold text-indigo-600 flex items-center border-b-2 border-indigo-600 pb-1"
+          >
+            <i class="ph ph-plus-circle-fill mr-1.5"></i> New Order
+          </a>
+        </nav>
+
+        <div class="flex items-center space-x-5">
+          <div class="flex flex-col items-end">
+            <span
+              class="text-[10px] font-bold text-gray-400 uppercase tracking-widest"
+              >Technician</span
+            >
+            <span id="user-display" class="text-sm font-bold text-gray-700"
+              >Loading...</span
+            >
+          </div>
+          <button
+            id="logoutBtn"
+            title="Sign Out"
+            class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-50 text-gray-500 hover:bg-red-50 hover:text-red-600 transition-all border border-gray-100"
+          >
+            <i class="ph ph-sign-out text-xl"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <form id="new-order-form" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 space-y-8">
+          <section
+            class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden"
+          >
+            <div
+              class="px-6 py-4 bg-gray-50 border-b flex items-center space-x-2"
+            >
+              <i class="ph-user-circle-fill text-indigo-600 text-xl"></i>
+              <h2 class="font-bold text-gray-800">Customer Information</h2>
+            </div>
+            <div class="p-6 space-y-4">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label
+                    class="block text-xs font-bold text-gray-500 uppercase mb-1"
+                    >Customer Name *</label
+                  >
+                  <input
+                    type="text"
+                    id="customerName"
+                    required
+                    class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                    placeholder="e.g. Subrata Dutta"
+                  />
+                </div>
+                <div>
+                  <label
+                    class="block text-xs font-bold text-gray-500 uppercase mb-1"
+                    >Phone Number *</label
+                  >
+                  <input
+                    type="tel"
+                    id="customerPhone"
+                    required
+                    class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                    placeholder="+91"
+                  />
+                </div>
+              </div>
+              <div>
+                <label
+                  class="block text-xs font-bold text-gray-500 uppercase mb-1"
+                  >Email Address</label
+                >
+                <input
+                  type="email"
+                  id="customerEmail"
+                  class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                  placeholder="example@mail.com"
+                />
+              </div>
+              <div>
+                <label
+                  class="block text-xs font-bold text-gray-500 uppercase mb-1"
+                  >Street Address *</label
+                >
+                <input
+                  type="text"
+                  id="customerAddress"
+                  required
+                  class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                  placeholder="Locality / Landmark"
+                />
+              </div>
+              <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div>
+                  <label
+                    class="block text-xs font-bold text-gray-500 uppercase mb-1"
+                    >City *</label
+                  >
+                  <input
+                    type="text"
+                    id="customerCity"
+                    required
+                    class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                  />
+                </div>
+                <div>
+                  <label
+                    class="block text-xs font-bold text-gray-500 uppercase mb-1"
+                    >State *</label
+                  >
+                  <select
+                    id="customerState"
+                    required
+                    class="w-full p-2.5 border border-gray-300 rounded-lg bg-white outline-none focus:ring-2 focus:ring-indigo-500"
+                  ></select>
+                </div>
+                <div>
+                  <label
+                    class="block text-xs font-bold text-gray-500 uppercase mb-1"
+                    >Pincode</label
+                  >
+                  <input
+                    type="text"
+                    id="customerZip"
+                    class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                  />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section
+            class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden"
+          >
+            <div
+              class="px-6 py-4 bg-gray-50 border-b flex items-center space-x-2"
+            >
+              <i class="ph-desktop-fill text-indigo-600 text-xl"></i>
+              <h2 class="font-bold text-gray-800">System & Problem Details</h2>
+            </div>
+            <div class="p-6 space-y-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label
+                    class="block text-xs font-bold text-gray-500 uppercase mb-1"
+                    >Equipment Type *</label
+                  >
+                  <select
+                    id="deviceType"
+                    required
+                    class="w-full p-2.5 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-indigo-500 outline-none"
+                  ></select>
+                </div>
+                <div id="otherDeviceDetails" class="hidden">
+                  <label
+                    class="block text-xs font-bold text-gray-500 uppercase mb-1"
+                    >Specify Device *</label
+                  >
+                  <input
+                    type="text"
+                    id="otherDeviceName"
+                    class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label
+                    class="block text-xs font-bold text-gray-500 uppercase mb-1"
+                    >Brand</label
+                  >
+                  <input
+                    type="text"
+                    id="deviceBrand"
+                    class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                    placeholder="e.g. Dell"
+                  />
+                </div>
+                <div>
+                  <label
+                    class="block text-xs font-bold text-gray-500 uppercase mb-1"
+                    >Model No</label
+                  >
+                  <input
+                    type="text"
+                    id="deviceModelNo"
+                    class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                  />
+                </div>
+                <div>
+                  <label
+                    class="block text-xs font-bold text-gray-500 uppercase mb-1"
+                    >Serial No</label
+                  >
+                  <input
+                    type="text"
+                    id="deviceSerialNo"
+                    class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                  />
+                </div>
+              </div>
+              <div>
+                <label
+                  class="block text-xs font-bold text-gray-500 uppercase mb-1"
+                  >Problem Reported *</label
+                >
+                <textarea
+                  id="issueDescription"
+                  required
+                  rows="3"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                  placeholder="Describe the issue in detail..."
+                ></textarea>
+              </div>
+
+              <div class="bg-indigo-50 rounded-xl p-5 border border-indigo-100">
+                <h3
+                  class="text-xs font-bold text-indigo-700 uppercase mb-3 tracking-wider"
+                >
+                  Accessories Received
+                </h3>
+                <div
+                  id="accessories-received"
+                  class="grid grid-cols-2 sm:grid-cols-4 gap-3"
+                >
+                  <label
+                    class="flex items-center space-x-2 text-sm text-gray-700 cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      name="accessories"
+                      value="Adapter"
+                      class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                    />
+                    <span>Adapter</span>
+                  </label>
+                  <label
+                    class="flex items-center space-x-2 text-sm text-gray-700 cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      name="accessories"
+                      value="Battery"
+                      class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                    />
+                    <span>Battery</span>
+                  </label>
+                  <label
+                    class="flex items-center space-x-2 text-sm text-gray-700 cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      name="accessories"
+                      value="RAM"
+                      class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                    />
+                    <span>RAM</span>
+                  </label>
+                  <label
+                    class="flex items-center space-x-2 text-sm text-gray-700 cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      name="accessories"
+                      value="Processor"
+                      class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                    />
+                    <span>Processor</span>
+                  </label>
+                  <label
+                    class="flex items-center space-x-2 text-sm text-gray-700 cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      name="accessories"
+                      value="HDD/SSD"
+                      class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                    />
+                    <span>HDD/SSD</span>
+                  </label>
+                  <label
+                    class="flex items-center space-x-2 text-sm text-gray-700 cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      name="accessories"
+                      value="Graphics Card"
+                      class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                    />
+                    <span>Graphics Card</span>
+                  </label>
+                  <label
+                    class="flex items-center space-x-2 text-sm text-gray-700 cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      name="accessories"
+                      value="Power Cable"
+                      class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                    />
+                    <span>Power Cable</span>
+                  </label>
+                  <label
+                    class="flex items-center space-x-2 text-sm text-gray-700 cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      name="accessories"
+                      value="Others (Specify)"
+                      id="otherAccessoriesCheckbox"
+                      class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                    />
+                    <span>Others</span>
+                  </label>
+                </div>
+                <div id="otherAccessoriesDetails" class="hidden mt-4">
+                  <input
+                    type="text"
+                    id="otherAccessoriesName"
+                    class="w-full p-2 border border-indigo-200 rounded-lg text-sm"
+                    placeholder="Specify others..."
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label
+                  class="block text-xs font-bold text-gray-500 uppercase mb-1"
+                  >Device Password (if any)</label
+                >
+                <input
+                  type="text"
+                  id="devicePassword"
+                  class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                  placeholder="Windows / BIOS password"
+                />
+              </div>
+            </div>
+          </section>
+
+          <section
+            class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden"
+          >
+            <div
+              class="px-6 py-4 bg-gray-50 border-b flex justify-between items-center"
+            >
+              <div class="flex items-center space-x-2">
+                <i class="ph-list-checks-fill text-indigo-600 text-xl"></i>
+                <h2 class="font-bold text-gray-800">Services & Billing</h2>
+              </div>
+              <button
+                type="button"
+                id="add-service-btn"
+                class="text-xs bg-indigo-600 text-white px-3 py-1.5 rounded-lg hover:bg-indigo-700 font-bold transition-all"
+              >
+                <i class="ph-plus-bold mr-1"></i> Add Service
+              </button>
+            </div>
+            <div class="p-0">
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead class="bg-gray-50 text-gray-500 font-bold border-b">
+                    <tr>
+                      <th class="px-6 py-3 text-left uppercase tracking-wider">
+                        Service Description
+                      </th>
+                      <th
+                        class="px-6 py-3 text-right uppercase tracking-wider w-32"
+                      >
+                        Rate (₹)
+                      </th>
+                      <th
+                        class="px-6 py-3 text-right uppercase tracking-wider w-24"
+                      >
+                        Disc %
+                      </th>
+                      <th
+                        class="px-6 py-3 text-right uppercase tracking-wider w-32"
+                      >
+                        Total (₹)
+                      </th>
+                      <th class="px-4 py-3 text-center w-16"></th>
+                    </tr>
+                  </thead>
+                  <tbody
+                    id="line-items-body"
+                    class="divide-y divide-gray-100"
+                  ></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <section
+            class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden"
+          >
+            <div
+              class="px-6 py-4 bg-gray-50 border-b flex items-center space-x-2"
+            >
+              <i class="ph-shield-check-fill text-indigo-600 text-xl"></i>
+              <h2 class="font-bold text-gray-800">Policy & Consent</h2>
+            </div>
+            <div class="p-6 space-y-4">
+              <div class="bg-red-50 p-4 rounded-xl border border-red-100 mb-4">
+                <p
+                  class="text-xs text-red-600 font-bold uppercase tracking-wide flex items-center"
+                >
+                  <i class="ph-warning-fill mr-1.5 text-lg"></i> Disclaimer
+                </p>
+                <p class="text-xs text-red-700 mt-1">
+                  We are not responsible for any data loss. Please ensure you
+                  have a backup before handing over the device.
+                </p>
+              </div>
+
+              <div id="data-backup-consent" class="space-y-3">
+                <label
+                  class="flex items-start space-x-3 p-3 rounded-lg border border-gray-100 hover:bg-gray-50 cursor-pointer"
+                >
+                  <input
+                    type="radio"
+                    name="dataBackup"
+                    value="backed_up"
+                    required
+                    class="mt-1 w-4 h-4 text-indigo-600 border-gray-300"
+                  />
+                  <span class="text-sm text-gray-700 font-medium"
+                    >I have already backed up my data.</span
+                  >
+                </label>
+                <label
+                  class="flex items-start space-x-3 p-3 rounded-lg border border-gray-100 hover:bg-gray-50 cursor-pointer"
+                >
+                  <input
+                    type="radio"
+                    name="dataBackup"
+                    value="no_backup_no_service"
+                    required
+                    class="mt-1 w-4 h-4 text-indigo-600 border-gray-300"
+                  />
+                  <span class="text-sm text-gray-700 font-medium"
+                    >I don't have a backup and I don't need one.</span
+                  >
+                </label>
+                <label
+                  class="flex items-start space-x-3 p-3 rounded-lg border border-gray-100 hover:bg-gray-50 cursor-pointer"
+                >
+                  <input
+                    type="radio"
+                    name="dataBackup"
+                    value="request_backup"
+                    required
+                    class="mt-1 w-4 h-4 text-indigo-600 border-gray-300"
+                  />
+                  <span class="text-sm text-gray-700 font-medium"
+                    >I want Lokenath Computer to backup my data (Charges may
+                    apply).</span
+                  >
+                </label>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="lg:col-span-1">
+          <div class="sticky top-24 space-y-6">
+            <div
+              class="bg-white rounded-2xl shadow-xl border-2 border-indigo-50 p-6 space-y-6"
+            >
+              <h2 class="text-lg font-bold text-gray-900 flex items-center">
+                <i class="ph-receipt-fill mr-2 text-indigo-600"></i> Order
+                Summary
+              </h2>
+
+              <div class="space-y-3 pb-6 border-b border-dashed">
+                <div class="flex justify-between text-sm">
+                  <span class="text-gray-500">Service Items</span>
+                  <span id="service-count" class="font-bold text-gray-700"
+                    >0</span
+                  >
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span class="text-gray-500">Subtotal</span>
+                  <span id="sidebar-subtotal" class="font-bold text-gray-700"
+                    >₹0</span
+                  >
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span class="text-gray-500">Discount</span>
+                  <span id="sidebar-discount" class="font-bold text-red-500"
+                    >-₹0</span
+                  >
+                </div>
+                <div class="flex justify-between pt-2">
+                  <span class="text-base font-bold text-gray-900"
+                    >Grand Total</span
+                  >
+                  <span
+                    id="sidebar-grand-total"
+                    class="text-2xl font-black text-indigo-600"
+                    >₹0</span
+                  >
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <div>
+                  <label
+                    class="block text-xs font-bold text-gray-500 uppercase mb-1"
+                    >Call Type *</label
+                  >
+                  <select
+                    id="ticketType"
+                    required
+                    class="w-full p-2.5 border border-gray-300 rounded-lg bg-white outline-none focus:ring-2 focus:ring-indigo-500"
+                  >
+                    <option value="Diagnostics Call">Diagnostics Call</option>
+                    <option value="Service Call">Service Call</option>
+                  </select>
+                </div>
+                <div>
+                  <label
+                    class="block text-xs font-bold text-gray-500 uppercase mb-1"
+                    >Assign Engineer *</label
+                  >
+                  <select
+                    id="assignedEngineer"
+                    required
+                    class="w-full p-2.5 border border-gray-300 rounded-lg bg-white outline-none focus:ring-2 focus:ring-indigo-500"
+                  ></select>
+                </div>
+                <div>
+                  <label
+                    class="block text-xs font-bold text-gray-500 uppercase mb-1"
+                    >Warranty Status *</label
+                  >
+                  <div class="flex space-x-4 mt-1">
+                    <label
+                      class="flex items-center space-x-2 text-sm cursor-pointer"
+                    >
+                      <input
+                        type="radio"
+                        name="underWarranty"
+                        value="yes"
+                        class="text-indigo-600"
+                      />
+                      <span>Yes</span>
+                    </label>
+                    <label
+                      class="flex items-center space-x-2 text-sm cursor-pointer"
+                    >
+                      <input
+                        type="radio"
+                        name="underWarranty"
+                        value="no"
+                        checked
+                        class="text-indigo-600"
+                      />
+                      <span>No</span>
+                    </label>
+                  </div>
+                </div>
+                <div
+                  id="warranty-details"
+                  class="hidden animate-pulse space-y-3"
+                >
+                  <input
+                    type="text"
+                    id="warrantyNo"
+                    class="w-full p-2 text-sm border rounded-lg"
+                    placeholder="Warranty Number"
+                  />
+                  <input
+                    type="date"
+                    id="warrantyExpDate"
+                    class="w-full p-2 text-sm border rounded-lg"
+                  />
+                </div>
+                <div class="pt-4 mt-4 border-t border-gray-100">
+                  <label
+                    class="block text-[10px] font-black text-indigo-400 uppercase mb-2 tracking-widest"
+                    >External Vendor (Optional)</label
+                  >
+                  <div class="space-y-3">
+                    <input
+                      type="text"
+                      id="vendorName"
+                      class="w-full p-2.5 text-sm border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500"
+                      placeholder="Vendor Name (if outsourcing)"
+                    />
+                    <input
+                      type="text"
+                      id="vendorReason"
+                      class="w-full p-2.5 text-sm border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500"
+                      placeholder="Reason for outsourcing"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label
+                    class="block text-xs font-bold text-gray-500 uppercase mb-1"
+                    >Exp. Delivery Date</label
+                  >
+                  <input
+                    type="date"
+                    id="expectedDeliveryDate"
+                    class="w-full p-2.5 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                id="submit-order-btn"
+                class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-indigo-200 transition-all flex items-center justify-center disabled:opacity-50 disabled:grayscale"
+              >
+                <i class="ph-file-plus-fill mr-2 text-xl"></i> Create Order
+              </button>
+            </div>
+
+            <p class="text-center text-xs text-gray-400">
+              <i class="ph-lock-fill mr-1"></i> Secure Service Intake System
+            </p>
+          </div>
+        </div>
+      </form>
+    </main>
+
+    <script src="../../assets/js/new_order.js"></script>
+  </body>
+</html>

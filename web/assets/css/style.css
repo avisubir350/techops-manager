@@ -1,0 +1,140 @@
+/* Core Typography */
+:root {
+  font-family: "Inter", sans-serif;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* Backgrounds & Glassmorphism */
+.bg-mesh {
+  background-color: #4f46e5;
+  background-image: radial-gradient(
+      at 0% 0%,
+      hsla(253, 16%, 7%, 1) 0,
+      transparent 50%
+    ),
+    radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 1) 0, transparent 50%);
+  background-attachment: fixed;
+}
+
+.glass-card,
+.glass-effect {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* --- NEW: Logo & Branding --- */
+.logo-glow {
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.3), 0 0 10px rgba(79, 70, 229, 0.4);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.logo-glow:hover {
+  transform: scale(1.08) rotate(0deg) !important; /* Forces straight on hover even if parent is tilted */
+  box-shadow: 0 0 35px rgba(255, 255, 255, 0.5), 0 0 15px rgba(79, 70, 229, 0.6);
+}
+
+/* Interactions */
+.input-focus:focus {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-5px);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(5px);
+  }
+}
+
+/* Form Elements */
+.password-strength {
+  height: 4px;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* --- NEW: History Timeline Decorations --- */
+#historyLog .relative::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: 10px;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, #e0e7ff, transparent);
+}
+
+/* Table & Scrollbar */
+thead th {
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #c7d2fe;
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #818cf8;
+}
+
+.absolute {
+  pointer-events: none;
+}
+
+/* Base style for sortable headers */
+thead th[data-sort-by] {
+  cursor: pointer;
+  position: relative;
+  padding-right: 20px !important;
+}
+
+/* Default state: show a faint double arrow */
+thead th[data-sort-by]::after {
+  content: "↕";
+  position: absolute;
+  right: 8px;
+  opacity: 0.3;
+}
+
+/* Ascending state */
+thead th[data-sort-by].sort-asc::after {
+  content: "↑";
+  opacity: 1;
+  color: #4f46e5; /* Indigo-600 */
+}
+
+/* Descending state */
+thead th[data-sort-by].sort-desc::after {
+  content: "↓";
+  opacity: 1;
+  color: #4f46e5;
+}

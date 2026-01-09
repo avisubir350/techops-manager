@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="../../assets/img/company_logo.png"
+    />
+    <title>Lokenath Computer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+    <link rel="stylesheet" href="../../assets/css/style.css" />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      .bg-mesh {
+        background-color: #4f46e5;
+        background-image: radial-gradient(
+            at 0% 0%,
+            hsla(253, 16%, 7%, 1) 0,
+            transparent 50%
+          ),
+          radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%);
+      }
+      .logo-glow {
+        box-shadow: 0 0 20px rgba(79, 70, 229, 0.4);
+        transition: transform 0.3s ease;
+      }
+      .logo-glow:hover {
+        transform: scale(1.05);
+      }
+    </style>
+  </head>
+  <body
+    class="bg-mesh min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
+  >
+    <div class="relative w-full max-w-md">
+      <div class="text-center mb-8">
+        <div
+          class="inline-block p-1 bg-white/20 rounded-full mb-4 backdrop-blur-sm"
+        >
+          <img
+            src="../../assets/img/lokenath_baba.png"
+            alt="Baba Lokenath"
+            class="w-24 h-24 rounded-full object-cover border-2 border-white shadow-lg"
+          />
+        </div>
+        <h1 class="text-3xl font-extrabold text-white tracking-tight">
+          Lokenath Computer
+        </h1>
+      </div>
+
+      <div class="glass-card rounded-3xl shadow-2xl p-8 md:p-10">
+        <header class="mb-8 text-center">
+          <h2 class="text-2xl font-bold text-gray-800">Welcome Back</h2>
+          <p class="text-sm text-gray-500 mt-2 font-medium">
+            Sign in to manage service orders
+          </p>
+        </header>
+
+        <div
+          id="regSuccessAlert"
+          class="hidden mb-6 p-4 bg-green-50 border border-green-100 text-green-700 rounded-2xl text-xs font-bold flex items-center animate-bounce"
+        >
+          <i class="ph-check-circle-fill mr-2 text-xl"></i> Account created!
+          Please log in.
+        </div>
+
+        <form id="loginForm" class="space-y-6">
+          <div>
+            <label
+              for="email"
+              class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 ml-1"
+              >Email Address</label
+            >
+            <div class="relative">
+              <i
+                class="ph-envelope-simple text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 text-xl"
+              ></i>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                required
+                placeholder="arjun.ghosh@email.com"
+                class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label
+              for="password"
+              class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 ml-1"
+            >
+              Password
+            </label>
+            <div class="relative">
+              <i
+                class="ph-lock text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 text-xl"
+              ></i>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                required
+                placeholder="••••••••"
+                class="w-full pl-10 pr-12 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm"
+              />
+              <button
+                type="button"
+                id="togglePassword"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-indigo-600"
+              >
+                <i class="ph-eye text-lg"></i>
+              </button>
+            </div>
+            <div class="flex justify-end mt-1 mr-1">
+              <a
+                href="forgot-password.html"
+                class="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-colors"
+              >
+                Forgot Password?
+              </a>
+            </div>
+          </div>
+
+          <div
+            id="errorMessage"
+            class="hidden p-3 bg-red-50 border border-red-100 text-red-600 rounded-xl text-xs font-medium flex items-center"
+          >
+            <i class="ph-warning-circle-fill mr-2 text-lg"></i>
+            <span id="errorText"></span>
+          </div>
+
+          <button
+            type="submit"
+            id="loginBtn"
+            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all active:scale-95 flex items-center justify-center"
+          >
+            Sign In
+          </button>
+        </form>
+
+        <div class="mt-8 pt-6 border-t border-gray-100 text-center">
+          <p class="text-sm text-gray-500 font-medium">
+            New technician?
+            <a
+              href="register.html"
+              class="text-indigo-600 hover:underline font-bold"
+              >Register here</a
+            >
+          </p>
+        </div>
+      </div>
+    </div>
+    <script src="../../assets/js/login.js"></script>
+  </body>
+</html>
