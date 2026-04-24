@@ -103,7 +103,14 @@ func (s *UserService) VerifyAndResetPassword(email, otp, newPassword string) err
 func (s *UserService) generateNumericOTP(length int) string {
     table := [...]byte{'1', '2', '3', '4', '5', '6', '7', '8', '9', '0'}
     b := make([]byte, length)
-    _, _ = rand.Read(b) // Use crypto/rand
+    _, err := rand.Read(b) // Use crypto/rand
+    if err != nil {
+        log.Printf("Failed to generate random bytes: %v", err)
+        // Fallback to a simple method if crypto/rand fails
+        for i := range b {
+            b[i] = table[i%len(table)]
+        }
+    }
     for i := 0; i < len(b); i++ {
         b[i] = table[int(b[i])%len(table)]
     }

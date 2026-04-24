@@ -75,11 +75,13 @@ func (h *AuthHandler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("User %s registered with email %s.", newUser.ID, newUser.Email)
 	w.WriteHeader(http.StatusCreated)
-	_ = json.NewEncoder(w).Encode(...)  // add _ = before each call
+	if err := json.NewEncoder(w).Encode(map[string]string{
 		"message": "User registered successfully",
 		"user_id": newUser.ID,
 		"email":   newUser.Email,
-	})
+	}); err != nil {
+		log.Printf("Failed to encode response: %v", err)
+	}
 }
 
 // LoginHandler handles user authentication
@@ -121,7 +123,7 @@ func (h *AuthHandler) LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("User %s logged in successfully.", user.Email)
 	w.WriteHeader(http.StatusOK)
-	_ = json.NewEncoder(w).Encode(...)  // add _ = before each call
+	if err := json.NewEncoder(w).Encode(map[string]interface{}{
 		"message": "Login successful",
 		"user": map[string]interface{}{
 			"id":    user.ID,
@@ -131,6 +133,9 @@ func (h *AuthHandler) LoginHandler(w http.ResponseWriter, r *http.Request) {
 			"role":  user.Role,
 		},
 		"token": "demo-jwt-token",
+	}); err != nil {
+		log.Printf("Failed to encode response: %v", err)
+	}
 	})
 }
 
@@ -154,9 +159,11 @@ func (h *AuthHandler) ForgotPasswordHandler(w http.ResponseWriter, r *http.Reque
     err := h.userService.RequestOTP(req.Email)
     if err != nil {
       	w.WriteHeader(http.StatusNotFound)
-        _ = json.NewEncoder(w).Encode(...)  // add _ = before each call
+        if err := json.NewEncoder(w).Encode(map[string]string{
             "message": "Email not found in our records",
-        })
+        }); err != nil {
+            log.Printf("Failed to encode response: %v", err)
+        }
         return
     }
 
