@@ -16,3 +16,32 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0  # full history needed for SonarQube blame data
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22' # Using a modern stable version
+          cache: true        # Automatically caches your go.mod dependencies
+
+      - name: Install dependencies
+        run: |
+          go mod download
+          go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+
+      - name: Lint with golangci-lint
+        run: |
+          # golangci-lint is the industry standard for Go, replacing flake8
+          golangci-lint run ./...
+
+      - name: Run Unit Tests with coverage
+        run: |
+          # Generates a coverage profile 'coverage.out'
+          go test -v -coverprofile=coverage.out ./...
+          
+          # Convert the coverage profile to a readable report in the console
+          go tool cover -func=coverage.out
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage.out
