@@ -74,7 +74,7 @@ func main() {
 	// DEBUG: Print all embedded files to terminal on startup
 	// This confirms if views/auth/login.html actually exists in the binary
 	log.Println("Listing embedded files:")
-	fs.WalkDir(webContent, ".", func(path string, d fs.DirEntry, err error) error {
+	_ = fs.WalkDir(webContent, ".", func(path string, d fs.DirEntry, err error) error {
 		if err == nil && !d.IsDir() {
 			log.Printf("-> Embedded: %s", path)
 		}
