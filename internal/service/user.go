@@ -3,6 +3,7 @@ package service
 import (
 	"crypto/rand"
 	"fmt"
+	"log"
 	"net/smtp"
 	"techops-manager/internal/domain"
 	"techops-manager/internal/repository"
