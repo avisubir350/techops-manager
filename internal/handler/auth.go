@@ -75,7 +75,7 @@ func (h *AuthHandler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("User %s registered with email %s.", newUser.ID, newUser.Email)
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(map[string]string{
+	_ = json.NewEncoder(w).Encode(...)  // add _ = before each call
 		"message": "User registered successfully",
 		"user_id": newUser.ID,
 		"email":   newUser.Email,
@@ -121,7 +121,7 @@ func (h *AuthHandler) LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("User %s logged in successfully.", user.Email)
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]interface{}{
+	_ = json.NewEncoder(w).Encode(...)  // add _ = before each call
 		"message": "Login successful",
 		"user": map[string]interface{}{
 			"id":    user.ID,
@@ -154,7 +154,7 @@ func (h *AuthHandler) ForgotPasswordHandler(w http.ResponseWriter, r *http.Reque
     err := h.userService.RequestOTP(req.Email)
     if err != nil {
       	w.WriteHeader(http.StatusNotFound)
-        json.NewEncoder(w).Encode(map[string]string{
+        _ = json.NewEncoder(w).Encode(...)  // add _ = before each call
             "message": "Email not found in our records",
         })
         return
