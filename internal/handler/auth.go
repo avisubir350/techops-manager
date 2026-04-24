@@ -137,7 +137,6 @@ func (h *AuthHandler) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Failed to encode response: %v", err)
 	}
 }
-}
 
 // ForgotPasswordHandler - Handles STEP 1: Sending the OTP
 func (h *AuthHandler) ForgotPasswordHandler(w http.ResponseWriter, r *http.Request) {
