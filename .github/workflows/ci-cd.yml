@@ -118,5 +118,5 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/weather-news-dashboard:latest
-            ${{ secrets.DOCKER_USERNAME }}/weather-news-dashboard:${{ steps.vars.outputs.tag }}       
+            ${{ secrets.DOCKER_USERNAME }}/techops_manager-app:latest
+            ${{ secrets.DOCKER_USERNAME }}/techops_manager-app:${{ steps.vars.outputs.tag }}       
