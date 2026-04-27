@@ -131,7 +131,7 @@ jobs:
         with:
           repository: 'avisubir350/Techops-config'
           token: ${{ secrets.GITOPS_TOKEN }}
-          path: 'weather-config'
+          path: 'Techops-config'
           ref: 'main' # Fetch the branch where deployment.yml lives
 
       - name: Update Kubernetes manifest
