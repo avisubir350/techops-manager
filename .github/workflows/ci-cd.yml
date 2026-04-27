@@ -121,7 +121,7 @@ jobs:
             ${{ secrets.DOCKER_USERNAME }}/techops-manager-app:latest
             ${{ secrets.DOCKER_USERNAME }}/techops-manager-app:${{ steps.vars.outputs.tag }}
    # ── Job 4: GitOps — Update config repo ────────────────────────────────────
- gitops-update:
+  gitops-update:
     runs-on: ubuntu-latest
     needs: build-and-push
     if: github.event_name == 'push'
