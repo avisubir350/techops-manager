@@ -44,7 +44,7 @@ jobs:
       - name: OWASP Dependency Check
         uses: dependency-check/Dependency-Check_Action@main
         with:
-          project: "weather-news-dashboard"
+          project: "techops-manager"
           path: "./"
           format: "ALL"
           output: "dependency-check-report"
