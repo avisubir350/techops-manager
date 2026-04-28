@@ -137,7 +137,7 @@ jobs:
       - name: Update Kubernetes manifest
         run: |
           cd Techops-config
-          
+          ls -R
           # 1. Update the image tag in techops-manifest.yml
           # Using a specific filename since you confirmed it exists in main
           sed -i "s|image:.*|image: ${{ secrets.DOCKER_USERNAME }}/techops-manager-app:${{ needs.build-and-push.outputs.image_tag }}|g" techops-manifest.yml
