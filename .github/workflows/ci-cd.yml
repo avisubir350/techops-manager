@@ -138,7 +138,7 @@ jobs:
         run: |
           cd Techops-config
           
-          # 1. Update the image tag in deployment.yml
+          # 1. Update the image tag in techops-manifest.yml
           # Using a specific filename since you confirmed it exists in main
           sed -i "s|image:.*|image: ${{ secrets.DOCKER_USERNAME }}/techops-manager-app:${{ needs.build-and-push.outputs.image_tag }}|g" techops-manifest.yml
 
@@ -147,12 +147,12 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
           # 3. Commit and Push specifically to main
-          git add deployment.yml
+          git add techops-manifest.yml
           
           if git diff --staged --quiet; then
             echo "No changes detected. Skipping push."
           else
             git commit -m "chore: update image to ${{ needs.build-and-push.outputs.image_tag }} [skip ci]"
             # Explicitly push the local 'main' branch to the remote 'main'
-            git push origin main
+            git push origin devops
           fi
