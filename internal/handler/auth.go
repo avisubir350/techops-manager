@@ -75,11 +75,13 @@ func (h *AuthHandler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("User %s registered with email %s.", newUser.ID, newUser.Email)
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(map[string]string{
+	if err := json.NewEncoder(w).Encode(map[string]string{
 		"message": "User registered successfully",
 		"user_id": newUser.ID,
 		"email":   newUser.Email,
-	})
+	}); err != nil {
+		log.Printf("Failed to encode response: %v", err)
+	}
 }
 
 // LoginHandler handles user authentication
@@ -121,7 +123,7 @@ func (h *AuthHandler) LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("User %s logged in successfully.", user.Email)
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]interface{}{
+	if err := json.NewEncoder(w).Encode(map[string]interface{}{
 		"message": "Login successful",
 		"user": map[string]interface{}{
 			"id":    user.ID,
@@ -131,7 +133,9 @@ func (h *AuthHandler) LoginHandler(w http.ResponseWriter, r *http.Request) {
 			"role":  user.Role,
 		},
 		"token": "demo-jwt-token",
-	})
+	}); err != nil {
+		log.Printf("Failed to encode response: %v", err)
+	}
 }
 
 // ForgotPasswordHandler - Handles STEP 1: Sending the OTP
@@ -154,14 +158,18 @@ func (h *AuthHandler) ForgotPasswordHandler(w http.ResponseWriter, r *http.Reque
     err := h.userService.RequestOTP(req.Email)
     if err != nil {
       	w.WriteHeader(http.StatusNotFound)
-        json.NewEncoder(w).Encode(map[string]string{
+        if err := json.NewEncoder(w).Encode(map[string]string{
             "message": "Email not found in our records",
-        })
+        }); err != nil {
+            log.Printf("Failed to encode response: %v", err)
+        }
         return
     }
 
     w.WriteHeader(http.StatusOK)
-    json.NewEncoder(w).Encode(map[string]string{"message": "OTP sent successfully"})
+    if err := json.NewEncoder(w).Encode(map[string]string{"message": "OTP sent successfully"}); err != nil {
+        log.Printf("Failed to encode response: %v", err)
+    }
 }
 
 // ResetPasswordWithOTPHandler - Handles STEP 2: Verifying OTP and Updating Password
@@ -186,14 +194,18 @@ func (h *AuthHandler) ResetPasswordWithOTPHandler(w http.ResponseWriter, r *http
     err := h.userService.VerifyAndResetPassword(req.Email, req.OTP, req.NewPassword)
     if err != nil {
        	w.WriteHeader(http.StatusUnauthorized) // 401
-        json.NewEncoder(w).Encode(map[string]string{
+        if err := json.NewEncoder(w).Encode(map[string]string{
             "message": err.Error(), 
-        })
+        }); err != nil {
+            log.Printf("Failed to encode response: %v", err)
+        }
         return
     }
 
     w.WriteHeader(http.StatusOK)
-    json.NewEncoder(w).Encode(map[string]string{"message": "Password updated successfully"})
+    if err := json.NewEncoder(w).Encode(map[string]string{"message": "Password updated successfully"}); err != nil {
+        log.Printf("Failed to encode response: %v", err)
+    }
 }
 
 // GetUsersHandler handles GET /api/users

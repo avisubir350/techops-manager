@@ -218,20 +218,23 @@ func (r *OrderRepository) CreateTicket(input *domain.TicketInput) (string, error
 	}
 	// ... (defer function remains the same) ...
 	defer func() {
-		if r := recover(); r != nil {
-			tx.Rollback()
-			log.Printf("Transaction panicked and rolled back: %v", r)
-		} else if err != nil {
-			tx.Rollback()
-			log.Printf("Transaction failed and rolled back: %v", err)
-		} else {
-			err = tx.Commit()
-			if err != nil {
-				log.Printf("Transaction commit failed: %v", err)
-			}
-		}
-	}()
-
+        if r := recover(); r != nil {
+                if rollbackErr := tx.Rollback(); rollbackErr != nil {
+                        log.Printf("Failed to rollback transaction after panic: %v", rollbackErr)
+                }
+                log.Printf("Transaction panicked and rolled back: %v", r)
+        } else if err != nil {
+                if rollbackErr := tx.Rollback(); rollbackErr != nil {
+                        log.Printf("Failed to rollback transaction: %v", rollbackErr)
+                }
+                log.Printf("Transaction failed and rolled back: %v", err)
+        } else {
+                err = tx.Commit()
+                if err != nil {
+                        log.Printf("Transaction commit failed: %v", err)
+                }
+        }
+      }()
 	var existingCustomerID string
 
 	// Select the customer_id based on the phone number
@@ -377,8 +380,11 @@ func (r *OrderRepository) OutsourceTicket(ticketID string, vendorName string, re
     if err != nil {
         return err
     }
-    defer tx.Rollback()
-
+   defer func() { 
+        if rollbackErr := tx.Rollback(); rollbackErr != nil {
+            log.Printf("Failed to rollback transaction: %v", rollbackErr)
+        }
+    }()
     // 1. Just "touch" the ticket to update its timestamp and last editor
     ticketTouch := `UPDATE tickets SET updated_at = NOW(), last_updated_by = ? WHERE ticket_id = ?`
     if _, err := tx.Exec(ticketTouch, userID, ticketID); err != nil {

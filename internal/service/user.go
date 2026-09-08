@@ -3,6 +3,7 @@ package service
 import (
 	"crypto/rand"
 	"fmt"
+	"log"
 	"net/smtp"
 	"techops-manager/internal/domain"
 	"techops-manager/internal/repository"
@@ -103,7 +104,13 @@ func (s *UserService) VerifyAndResetPassword(email, otp, newPassword string) err
 func (s *UserService) generateNumericOTP(length int) string {
     table := [...]byte{'1', '2', '3', '4', '5', '6', '7', '8', '9', '0'}
     b := make([]byte, length)
-    rand.Read(b) // Use crypto/rand
+    if _, err := rand.Read(b); err != nil {
+        log.Printf("Failed to generate random bytes: %v", err)
+        // Fallback to a simple method if crypto/rand fails
+        for i := range b {
+            b[i] = table[i%len(table)]
+        }
+    }
     for i := 0; i < len(b); i++ {
         b[i] = table[int(b[i])%len(table)]
     }
